@@ -48,11 +48,11 @@ $CFG->geshifilter_indentsize = 4;
 // urls="yes":        Enable keyword-to-URL conversion
 // indentsize="num":  Switch tabs for this many spaces. Be warned! Only TABS are replaced.
 function geshi_filter($courseid, $text) {
-  if (stripos($text, '<code>')) {
+  if (stripos($text, '<code>') !== false) {
      $search = '/<code(.*?)>(.*?)<\/code>\s*/is';
-  } else if (stripos($text, '<php>')) {
+  } else if (stripos($text, '<php>') !== false) {
      $search = '/<php(.*?)>(.*?)<\/php>\s*/is';
-  } else if (stripos($text, 'syntax=')) {
+  } else if (stripos($text, 'syntax=') !== false) {
      $search = '/<span (.*?)>(.*?)<\/span>\s*/is';
   } else {
      return $text;
