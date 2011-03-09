@@ -1,29 +1,34 @@
-<?php //$Id: filter.php,v 1.8 2005/05/19 17:32:30 defacer Exp $
+<?php
 
+// This file is part of Moodle - http://moodle.org/
+//
+// GeSHi syntax highlight filter for Moodle
+// Based on work by Grigory Rubtsov <rgbeast@onlineuniversity.ru>, 2005
+//
+// Uses GeSHi syntax highlighter 1.0.7.5
+// http://qbnz.com/highlighter/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**************************************************************
- *  This program is a part of Moodle - Modular Object-Oriented Dynamic 
- *  Learning Environment - http://moodle.org                             
- *
- *  GeSHi syntax highlight filter for Moodle
- *  By Nigel McNie <nigel@geshi.org>, 2005
- *  Based on work by Grigory Rubtsov <rgbeast@onlineuniversity.ru>, 2005
- *
- *  Uses GeSHi syntax highlighter 1.0.7.5
- *  http://qbnz.com/highlighter/
- *  @author    Nigel McNie <nigel@geshi.org>
- *
- *  This program is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License
- *  as published by the Free Software Foundation; either version 2
- *  of the License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  http://www.gnu.org/copyleft/gpl.html
-**************************************************************/
+/**
+ * @package    filter
+ * @subpackage feshi
+ * @copyright  2005 Nigel McNie <nigel@geshi.org>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot."/filter/geshi/geshi/geshi.php");
 
@@ -65,7 +70,7 @@ function geshi_filter_callback($data) {
 
     //echo 'data as inputted:';
     //geshi_dbg($data);
-    
+
     $options = array(
         'syntax'      => 'php',
         'linenumbers' => $CFG->geshifilter_linenumbers,
@@ -96,7 +101,7 @@ function geshi_filter_callback($data) {
         $chosen_options_keys = array_keys($chosen_options);
         //echo 'chosen options processed';
         //geshi_dbg($chosen_options);
-        
+
         // Set options
         foreach (array_keys($options) as $key) {
             if (in_array($key, $chosen_options_keys)) {
@@ -111,11 +116,11 @@ function geshi_filter_callback($data) {
         if ('' == $options['syntax']) {
             return '<pre>' . $data[2] . '</pre>';
         }
-        
+
         // BC for original plugin
         if ('_' == $options['syntax'][0]) {
             $options['linenumbers'] = true;
-            $options['syntax'] = substr($options['syntax'], 1);      
+            $options['syntax'] = substr($options['syntax'], 1);
         }
 
         // Because GeSHi uses html4strict as language name for
@@ -128,7 +133,7 @@ function geshi_filter_callback($data) {
         $geshi =& new GeSHi($code, $options['syntax']);
         $geshi->enable_classes(true);
         $geshi->set_overall_style('font-family: monospace;');
-        
+
         $header = $footer = '';
         if (geshi_is_yes($options['inline'])) {
             $geshi->set_header_type(GESHI_HEADER_NONE);
@@ -146,13 +151,13 @@ function geshi_filter_callback($data) {
                 $geshi->set_header_type(GESHI_HEADER_DIV);
             }
         }
-        
+
         if (!geshi_is_yes($options['urls'])) {
             for ($i = 0; $i < 5; $i++) {
                 $geshi->set_url_for_keyword_group($i, '');
             }
         }
-        
+
         return $header . $geshi->parse_code() . $footer;
     }
 }
@@ -175,5 +180,3 @@ function geshi_is_yes ($str) {
 function geshi_dbg($input) {
     echo '<pre>' . htmlspecialchars(print_r($input, true)) . '</pre>';
 }
-
-?>

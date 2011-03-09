@@ -6,7 +6,7 @@ and many other languages (see list in geshi/geshi/)
 
 To Install it:
     - Enable if from "Administration/Filters".
-  
+
 To Use it:
     - Enclose your code in <span syntax="langname"> </span>
     - There are some options available:
@@ -17,7 +17,7 @@ To Use it:
       <span syntax="langname" linenumbers="yes" urls="no" indentsize="2">
     - Syntax attribute must come first, the others are optional
     - line numbers are off by default, and URLs are on.
-    
+
 To modify colors:
     First way (with brute force)
      	- Go to file geshi/geshi/language_name.php, find there 'STYLES' array.
