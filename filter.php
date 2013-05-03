@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // GeSHi syntax highlight filter for Moodle
@@ -22,15 +21,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    filter
- * @subpackage feshi
+ * @package    filter_geshi
  * @copyright  2005 Nigel McNie <nigel@geshi.org>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot."/filter/geshi/geshi/geshi.php");
+require_once($CFG->dirroot . '/filter/geshi/geshi/geshi.php');
 
 //
 // DEFAULT CONFIGURATION
@@ -47,12 +45,13 @@ $CFG->geshifilter_urls = true;
 // Indent Size: controls the number of spaces that are substituted for a tab
 $CFG->geshifilter_indentsize = 4;
 
+class filter_geshi extends moodle_text_filter {
 
 // Highlight code enclosed by <span syntax="langname"> </span>, with options:
 // linenumbers="yes": Enable line numbers
 // urls="yes":        Enable keyword-to-URL conversion
 // indentsize="num":  Switch tabs for this many spaces. Be warned! Only TABS are replaced.
-function geshi_filter($courseid, $text) {
+public function filter($text, array $options = array()) {
   if (stripos($text, '<code>') !== false) {
      $search = '/<code(.*?)>(.*?)<\/code>\s*/is';
   } else if (stripos($text, '<php>') !== false) {
@@ -62,10 +61,10 @@ function geshi_filter($courseid, $text) {
   } else {
      return $text;
   }
-  return preg_replace_callback($search, 'geshi_filter_callback', $text);
+  return preg_replace_callback($search, 'self::geshi_filter_callback', $text);
 }
 
-function geshi_filter_callback($data) {
+protected function geshi_filter_callback($data) {
     global $CFG;
 
     //echo 'data as inputted:';
@@ -128,19 +127,19 @@ function geshi_filter_callback($data) {
         if ('html' == $options['syntax']) {
             $options['syntax'] = 'html4strict';
         }
-        $code = geshi_filter_decode_special_chars(geshi_filter_br2nl($data[2]));
+        $code = self::geshi_filter_decode_special_chars(self::geshi_filter_br2nl($data[2]));
 
-        $geshi =& new GeSHi($code, $options['syntax']);
+        $geshi = new GeSHi($code, $options['syntax']);
         $geshi->enable_classes(true);
         $geshi->set_overall_style('font-family: monospace;');
 
         $header = $footer = '';
-        if (geshi_is_yes($options['inline'])) {
+        if (self::geshi_is_yes($options['inline'])) {
             $geshi->set_header_type(GESHI_HEADER_NONE);
             $header = '<span style="font-family:monospace;" class="' . $options['syntax'] . '">';
             $footer = '</span>';
         } else {
-            if (geshi_is_yes($options['linenumbers'])) {
+            if (self::geshi_is_yes($options['linenumbers'])) {
                 $geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 5);
                 $geshi->set_line_style('color:#222;', 'color:#888;');
                 $geshi->set_header_type(GESHI_HEADER_DIV);
@@ -152,7 +151,7 @@ function geshi_filter_callback($data) {
             }
         }
 
-        if (!geshi_is_yes($options['urls'])) {
+        if (!self::geshi_is_yes($options['urls'])) {
             for ($i = 0; $i < 5; $i++) {
                 $geshi->set_url_for_keyword_group($i, '');
             }
@@ -162,21 +161,22 @@ function geshi_filter_callback($data) {
     }
 }
 
-function geshi_filter_br2nl($str) {
+static public function geshi_filter_br2nl($str) {
   return preg_replace("'<br\s*\/?>\r?\n?'","\n",$str);
 }
 
-function geshi_filter_decode_special_chars($str) {
+static public function geshi_filter_decode_special_chars($str) {
   // analog of htmlspecialchars_decode in PHP 5
   $search = array("&amp;","&quot;", "&lt;", "&gt;","&#92;","&#39;");
   $replace = array("&","\"", "<", ">","\\","\'");
   return str_replace($search, $replace, $str);
 }
 
-function geshi_is_yes ($str) {
+static public function geshi_is_yes ($str) {
     return ('yes' == $str || '1' == $str);
 }
 
-function geshi_dbg($input) {
+static public function geshi_dbg($input) {
     echo '<pre>' . htmlspecialchars(print_r($input, true)) . '</pre>';
+}
 }
