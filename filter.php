@@ -130,7 +130,7 @@ protected function geshi_filter_callback($data) {
         $code = self::geshi_filter_decode_special_chars(self::geshi_filter_br2nl($data[2]));
 
         $geshi = new GeSHi($code, $options['syntax']);
-        $geshi->enable_classes(true);
+        $geshi->enable_classes(false);
         $geshi->set_overall_style('font-family: monospace;');
 
         $header = $footer = '';
