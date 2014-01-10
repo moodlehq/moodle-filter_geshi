@@ -1,3 +1,4 @@
 <?php
 
-$string['filtername'] = 'Geshi code highlighting filter';
+$string['filtername'] = 'GeSHi';
+$string['pluginname'] = 'GeSHi';
