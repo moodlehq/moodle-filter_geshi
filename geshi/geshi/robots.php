@@ -4,10 +4,8 @@
  * --------
  * Author: Christian Lescuyer (cl@goelette.net)
  * Copyright: (c) 2006 Christian Lescuyer http://xtian.goelette.info
- * Release Version: 1.0.7.8
- * CVS Revision Version: $Revision: 1.2 $
+ * Release Version: 1.0.8.11
  * Date Started: 2006/02/17
- * Last Modified: $Date: 2006/02/25 00:46:33 $
  *
  * robots.txt language file for GeSHi.
  *
@@ -35,15 +33,17 @@
  ************************************************************************************/
 
 $language_data = array (
-    'LANG_NAME' => 'Robots',
+    'LANG_NAME' => 'robots.txt',
     'COMMENT_SINGLE' => array(1 => '#'),
     'COMMENT_MULTI' => array(),
+    'COMMENT_REGEXP' => array(1 => "/^Comment:.*?/m"),
     'CASE_KEYWORDS' => GESHI_CAPS_NO_CHANGE,
     'QUOTEMARKS' => array(),
     'ESCAPE_CHAR' => '',
     'KEYWORDS' => array(
         1 => array(
-            'User-agent', 'Disallow'
+            'Allow', 'Crawl-delay', 'Disallow', 'Request-rate', 'Robot-version',
+            'Sitemap', 'User-agent', 'Visit-time'
             )
         ),
     'SYMBOLS' => array(
